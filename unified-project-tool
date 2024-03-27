@@ -48,7 +48,7 @@ if [ "$run_mode" = "install" ]; then
     # Install project templates
     echo "Installing projects to $PROJECTS_INSTALL_DIR..."
     mkdir -p $PROJECTS_INSTALL_DIR
-    sudo cp -r projects/* $PROJECTS_INSTALL_DIR/
+    cp -r projects/* $PROJECTS_INSTALL_DIR/
 
     echo ""
     echo "Done!"
