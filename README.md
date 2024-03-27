@@ -40,7 +40,7 @@ Available project types:
 - cmake-c
 - cmake-cpp
 
-Unified project tool v1.0.0
+unified-project-tool v1.0.0
 Copyright (c) 2024 jarvarvarvis
 ```
 

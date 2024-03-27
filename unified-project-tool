@@ -26,7 +26,7 @@ function display-help-message {
     fi
 
     echo ""
-    echo "Unified project tool v$UNIFIED_PROJECT_TOOL_VERSION"
+    echo "unified-project-tool v$UNIFIED_PROJECT_TOOL_VERSION"
     echo "Copyright (c) 2024 jarvarvarvis"
 }
 
