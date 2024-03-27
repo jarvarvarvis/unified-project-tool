@@ -1,0 +1,3 @@
+#!/bin/bash
+cmake_current_version=$(cmake --version | head -n1 | awk '{ print $3 }')
+echo "cmake-cpp" "CMakeLists.txt" "CMAKE_CURRENT_VERSION=$cmake_current_version"
