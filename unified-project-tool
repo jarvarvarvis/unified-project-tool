@@ -98,7 +98,7 @@ if [ "$run_mode" = "bootstrap" ]; then
     if [ -f "$bootstrap_args_file" ]; then
         echo "Creating $project_type project in $(pwd)"
 
-        # Temporarily make the bootstrap args file executable
+        # Execute bootstrap args file and pass result to the bootstrap function
         bootstrap-project $project_name $(exec $bootstrap_args_file)
     else
         echo "Unknown project type: \"$project_type\"!"

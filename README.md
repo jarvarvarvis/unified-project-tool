@@ -14,7 +14,8 @@ Here is the general format for .bootstrap-args files:
 echo "<project type name>" "<bootstrapped file> <args: NAME=VALUE>"
 ```
 
-Using bash here isn't a requirement, since the bootstrap file is run using `exec <name>.bootstrap-args` in the script. (See line 102)
+Using bash here isn't a requirement, since the bootstrap file is run using `exec <name>.bootstrap-args` in the script.
+(See [line 102 in the script](unified-project-tool#L102))
 
 You could, for example, use python to provide the necessary arguments to unified-project-tool.
 
