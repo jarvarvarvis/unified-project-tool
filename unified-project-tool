@@ -1,41 +1,60 @@
 #!/bin/bash
 
 UNIFIED_PROJECT_TOOL_VERSION="1.0.0"
-UNIFIED_PROJECT_TOOL_AUTHOR="jarvarvarvis"
 
-EXECUTABLE_INSTALL_DIR="/usr/local/bin/"
-PROJECTS_INSTALL_DIR="$HOME/.unified-project-tool/"
-
-# Installing
-if [ "$1" = "install" ]; then
-    echo "Installing unified-project-tool to $EXECUTABLE_INSTALL_DIR..."
-
-    # Copy unified-project-tool executable
-    sudo cp unified-project-tool $EXECUTABLE_INSTALL_DIR
-    echo ""
-    
-    echo "Installing projects to $PROJECTS_INSTALL_DIR..."
-
-    # Copy project templates
-    mkdir -p $PROJECTS_INSTALL_DIR
-    sudo cp -r projects/* $PROJECTS_INSTALL_DIR
-    echo ""
-    
-    echo "Done! Press any key to continue..."
-    read
-    exit
-fi
+EXECUTABLE_INSTALL_DIR="${EXECUTABLE_INSTALL_DIR:-/usr/local/bin}"
+PROJECTS_INSTALL_DIR="${PROJECTS_INSTALL_DIR:-$HOME/.unified-project-tool}"
 
 # Help message
 function display-help-message {
-    echo "Usage: $0 [PROJECT TYPE] [PROJECT NAME]"
+    echo "Usage: $0 [MODE] [PROJECT TYPE] [PROJECT NAME]"
+
+    echo ""
+    echo "Modes:"
+    echo "- bootstrap: Bootstrap a project with the specified type and name"
+    echo "- install:   Install unified-project-tool to the paths defined by EXECUTABLE_INSTALL_DIR"
+    echo "             and PROJECTS_INSTALL_DIR (see defaults in the executable: $0)"
+    echo "- help:      Show this help message"
+    echo ""
+
+    # List available project types (if installed)
+    if [ -d $PROJECTS_INSTALL_DIR ]; then
+        echo "Available project types:"
+        for d in $PROJECTS_INSTALL_DIR/*/; do
+            echo "- $(basename -- $d)"
+        done
+    fi
 
     echo ""
     echo "Unified project tool v$UNIFIED_PROJECT_TOOL_VERSION"
-    echo "Originally written by $UNIFIED_PROJECT_TOOL_AUTHOR"
+    echo "Copyright (c) 2024 jarvarvarvis"
 }
 
-# Project bootstrapping
+# Get run mode
+run_mode="$1"
+
+# Show help message in help mode
+if [ "$run_mode" = "help" ]; then
+    display-help-message
+    exit
+fi
+
+# Install mode
+if [ "$run_mode" = "install" ]; then
+    # Install unified-project-tool executable
+    echo "Installing unified-project-tool to $EXECUTABLE_INSTALL_DIR..."
+    sudo cp unified-project-tool $EXECUTABLE_INSTALL_DIR/
+
+    # Install project templates
+    echo "Installing projects to $PROJECTS_INSTALL_DIR..."
+    mkdir -p $PROJECTS_INSTALL_DIR
+    sudo cp -r projects/* $PROJECTS_INSTALL_DIR/
+
+    echo ""
+    echo "Done!"
+fi
+
+# Project bootstrap function
 function bootstrap-project {
 	project_name="$1"
 	project_type="$2"
@@ -56,27 +75,30 @@ function bootstrap-project {
 	done
 }
 
-# Get args
-project_type="$1"
-project_name="$2"
+# Bootstrapping mode
+if [ "$run_mode" = "bootstrap" ]; then
+    # Get args
+    project_type="$2"
+    project_name="$3"
 
-if [ -z "$project_type" ]; then
-    display-help-message
-    exit
-fi
+    if [ -z "$project_type" ]; then
+        display-help-message
+        exit
+    fi
 
-if [ -z "$project_name" ]; then
-    display-help-message
-    exit
-fi
+    if [ -z "$project_name" ]; then
+        display-help-message
+        exit
+    fi
 
-bootstrap_args_file=$PROJECTS_INSTALL_DIR/$project_type.bootstrap-args
+    bootstrap_args_file=$PROJECTS_INSTALL_DIR/$project_type.bootstrap-args
 
-echo "Got bootstrap args file: $bootstrap_args_file"
+    echo "Got bootstrap args file: $bootstrap_args_file"
 
-if [ -f "$bootstrap_args_file" ]; then
-	echo "Creating $project_type project in $(pwd)"
-	bootstrap-project $project_name $(bash $bootstrap_args_file)
-else
-	echo "Unknown project type: \"$project_type\"!"
+    if [ -f "$bootstrap_args_file" ]; then
+        echo "Creating $project_type project in $(pwd)"
+        bootstrap-project $project_name $(bash $bootstrap_args_file)
+    else
+        echo "Unknown project type: \"$project_type\"!"
+    fi
 fi
