@@ -50,6 +50,9 @@ if [ "$run_mode" = "install" ]; then
     mkdir -p $PROJECTS_INSTALL_DIR
     cp -r projects/* $PROJECTS_INSTALL_DIR/
 
+    # Make .bootstrap-args files executable
+    find $PROJECTS_INSTALL_DIR/ -name "*.bootstrap-args" -type f -exec chmod +x \{\} \;
+
     echo ""
     echo "Done!"
 fi
